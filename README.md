@@ -10,27 +10,37 @@
 - Nginx: Load balancer para gerenciamento de tráfego.
 - Mailtrap: Para testes de envio de e-mails.
 - Maven: Para build e gerenciamento de dependências.
-- Objetivo do Projeto
 
 # Configuração e Execução
+
 Para configurar e executar o SAMUCABANK, siga estas etapas:
 
 1- Clonar o Repositório:
+
 git clone https://github.com/seuusuario/samucabank.git
 
 2- Criar a Imagem do Docker:
+
 Antes de iniciar a aplicação, crie a imagem do Docker a partir do arquivo Dockerfile:
+
 docker build -t samucabank-image .
 
 3- Configurar o Ambiente:
+
 Certifique-se de ter Docker e Docker Compose instalados. Consulte a documentação oficial para instruções de instalação.
+
 Iniciar os Serviços com Docker Compose:
+
 Agora, inicie os serviços usando Docker Compose:
+
 docker-compose up -d
 
 4- Acessar a Aplicação:
+
 Após a inicialização, a aplicação estará disponível em http://localhost:8080. Para documentação da API, use Swagger, disponível em http://localhost:8080/swagger-ui.html.
 
 5- Acessar o Banco de Dados MySQL:
+
 Para acessar diretamente o banco de dados, use o seguinte comando:
+
 docker exec -it samucabank_db_1 mysql -u root -p
