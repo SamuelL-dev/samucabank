@@ -1,0 +1,25 @@
+POST http://localhost:8080/api/users
+Content-Type: application/json
+Content-Length: 217
+User-Agent: IntelliJ HTTP Client/IntelliJ IDEA 2024.1
+Accept-Encoding: br, deflate, gzip, x-gzip
+Accept: */*
+
+{
+  "firstName": "",
+  "lastName": "",
+  "password": "",
+  "email": "",
+  "document": "",
+  "cep": "",
+  "addressNumber": "",
+  "phoneNumber": "",
+  "dateOfBirth": "",
+  "maritalStatus": "MARRIED",
+  "gender": "MAN"
+}
+
+<> 2024-04-29T234854.422.json
+
+###
+

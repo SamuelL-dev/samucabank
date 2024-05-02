@@ -1,0 +1,52 @@
+{
+  "timestamp": "2024-04-30T02:48:54.071030300Z",
+  "status": 422,
+  "error": "One or more parameters are invalid",
+  "validationErrors": [
+    {
+      "field": "password",
+      "message": "tamanho deve ser entre 6 e 14"
+    },
+    {
+      "field": "firstName",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "cep",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "dateOfBirth",
+      "message": "não deve ser nulo"
+    },
+    {
+      "field": "document",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "password",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "phoneNumber",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "lastName",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "addressNumber",
+      "message": "não deve estar em branco"
+    },
+    {
+      "field": "cep",
+      "message": "tamanho deve ser entre 8 e 8"
+    },
+    {
+      "field": "email",
+      "message": "não deve estar em branco"
+    }
+  ],
+  "path": "/api/users"
+}

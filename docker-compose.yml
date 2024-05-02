@@ -1,0 +1,63 @@
+version: "3.5"
+
+services:
+  mysqldb:
+    image: mysql:latest
+    hostname: mysqldb
+    container_name: mysqldb
+    volumes:
+      - ./data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: "samucabank"
+      MYSQL_USER: "samuca"
+      MYSQL_ROOT_PASSWORD: "1234"
+      MYSQL_PASSWORD: "1234"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3307:3306
+
+
+  api01: &api
+    image: openapi:latest
+    hostname: api01
+    environment:
+      - DB_HOSTNAME=mysqldb
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysqldb
+    deploy:
+      resources:
+        limits:
+          cpus: "0.6"
+          memory: "200MB"
+
+  api02:
+    <<: *api
+    hostname: api02
+    environment:
+      - DB_HOSTNAME=mysqldb
+    ports:
+      - "8082:8080"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api01
+      - api02
+    ports:
+      - "9999:9999"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.17"
+          memory: "10MB"
+
+networks:
+  default:
+    driver: bridge
+    name: rede-api
