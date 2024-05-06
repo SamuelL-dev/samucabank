@@ -12,6 +12,8 @@ import samucabank.apibank.api.dtos.request.UserRequest;
 import samucabank.apibank.api.dtos.response.UserResponse;
 import samucabank.apibank.domain.service.serviceAction.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -20,9 +22,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<List<UserResponse>> getAllUsers(Pageable pageable) {
         Page<UserResponse> users = userService.findAll(pageable);
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(users.getContent());
     }
 
     @GetMapping("/{id}")
