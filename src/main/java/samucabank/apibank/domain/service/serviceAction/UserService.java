@@ -61,7 +61,6 @@ public class UserService {
         final Address address = viaCepService.saveAddressFromCep(data.getCep(), data.getAddressNumber());
         user.setAddress(address);
 
-
         this.accountCreationNotification.sendNotification(data.getEmail());
 
 

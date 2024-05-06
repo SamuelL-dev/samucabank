@@ -5,10 +5,4 @@ import samucabank.apibank.domain.model.Card;
 import samucabank.apibank.domain.model.Wallet;
 
 
-public record CardOperationArgs(
-        CardTransactionRequest data,
-        Card card,
-        Wallet wallet
-
-) {
-}
+public record CardOperationArgs(CardTransactionRequest data, Card card, Wallet wallet) {}

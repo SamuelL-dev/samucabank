@@ -6,5 +6,5 @@ import samucabank.apibank.domain.model.Card;
 
 
 @Repository
-public interface CardRepository extends JpaRepository<Card, Long> {
+public interface CardRepository extends JpaRepository<Card, String> {
 }

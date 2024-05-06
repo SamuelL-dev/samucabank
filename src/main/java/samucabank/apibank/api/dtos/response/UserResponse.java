@@ -36,5 +36,5 @@ public class UserResponse {
 
     private String walletId;
 
-    private Long cardId;
+    private String cardId;
 }

@@ -50,12 +50,12 @@ public class CardService {
 
     private final CardLimitManager cardLimitManager;
 
-    public Card findById(final Long id) {
+    public Card findById(final String id) {
         return cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
     }
 
-    public CardResponse findByIdDto(final Long id) {
+    public CardResponse findByIdDto(final String id) {
         Card card = findById(id);
         return mapper.map(card, CardResponse.class);
     }
@@ -75,7 +75,7 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponse createCardTransaction(final Long cardId, final CardTransactionRequest data) {
+    public CardResponse createCardTransaction(final String cardId, final CardTransactionRequest data) {
         Card card = this.findById(cardId);
 
         Wallet wallet = card.getUser().getWallet();
@@ -103,7 +103,7 @@ public class CardService {
     }
 
     @Transactional
-    public void delete(final Long id) {
+    public void delete(final String id) {
         final Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
 

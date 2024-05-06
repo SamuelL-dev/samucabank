@@ -32,7 +32,7 @@ CREATE TABLE tb_wallet (
 );
 
 CREATE TABLE tb_card (
-    id bigint NOT NULL auto_increment,
+    id VARCHAR(36) NOT NULL,
     card_number VARCHAR(20),
     user_id VARCHAR(36),
     expiration_date DATE NOT NULL,
