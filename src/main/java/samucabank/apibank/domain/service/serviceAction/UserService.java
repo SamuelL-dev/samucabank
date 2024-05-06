@@ -4,8 +4,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.UserRequest;
+import samucabank.apibank.api.dtos.response.CardResponse;
 import samucabank.apibank.api.dtos.response.UserResponse;
 import samucabank.apibank.api.infrastructure.CalculateScore;
 import samucabank.apibank.api.infrastructure.viacep.ViaCepClientImpl;
@@ -35,6 +38,11 @@ public class UserService {
 
     @Qualifier("accountCreationNotification")
     private final NotificationStrategy accountCreationNotification;
+
+    public Page<UserResponse> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable).
+                map(it -> mapper.map(it, UserResponse.class));
+    }
 
     public User findById(final String id) {
         return userRepository.findById(id)

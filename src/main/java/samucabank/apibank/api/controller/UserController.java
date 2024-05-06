@@ -3,6 +3,8 @@ package samucabank.apibank.api.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,12 @@ import samucabank.apibank.domain.service.serviceAction.UserService;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping
+    public ResponseEntity<Page<UserResponse>> getAllUsers(Pageable pageable) {
+        Page<UserResponse> users = userService.findAll(pageable);
+        return ResponseEntity.ok(users);
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Find user by ID", description = "Find a user by its ID", method = "GET")
