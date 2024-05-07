@@ -8,7 +8,7 @@ import java.time.LocalDate;
 @Component
 public class CalculateScore {
 
-    public void calculateScore(User user) {
+    public void calculateScore(final User user) {
         int genderWeight = 7;
         int maritalStatusWeight = 3;
         int dateOfBirthWeight = 5;
@@ -26,7 +26,7 @@ public class CalculateScore {
             case DIVORCED -> maritalStatusWeight *= 0.2;
         }
 
-        LocalDate currentDate = LocalDate.now();
+        final LocalDate currentDate = LocalDate.now();
 
         int age = currentDate.getYear() - user.getDateOfBirth().getYear();
         if (age >= 18) {
@@ -34,7 +34,7 @@ public class CalculateScore {
         } else if (age < 25) {
             dateOfBirthWeight *= 0.5;
         } else if (age < 50) {
-            dateOfBirthWeight *= (int) 0.1;
+            dateOfBirthWeight *= 0.1;
         }
 
         int score = genderWeight * 100 + maritalStatusWeight * 100 + dateOfBirthWeight * 100;
