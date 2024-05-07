@@ -22,6 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
+    @Operation(summary = "Find all users", description = "Find all users by pageable", method = "GET")
     public ResponseEntity<List<UserResponse>> getAllUsers(Pageable pageable) {
         Page<UserResponse> users = userService.findAll(pageable);
         return ResponseEntity.ok(users.getContent());
