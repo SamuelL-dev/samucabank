@@ -17,6 +17,7 @@ public class Wallet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Setter(AccessLevel.NONE)
     private String id;
 
     @Column(nullable = false)
