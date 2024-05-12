@@ -1,4 +1,4 @@
-package samucabank.apibank.domain.enuns.card;
+package samucabank.apibank.domain.enums.card;
 
 public enum CardOperationType {
 

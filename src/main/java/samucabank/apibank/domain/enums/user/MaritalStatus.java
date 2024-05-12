@@ -1,4 +1,4 @@
-package samucabank.apibank.domain.enuns.user;
+package samucabank.apibank.domain.enums.user;
 
 public enum MaritalStatus {
 
