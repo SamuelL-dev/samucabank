@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.CardTransactionRequest;
 import samucabank.apibank.api.dtos.response.CardResponse;
-import samucabank.apibank.api.infrastructure.CardDataGenerator;
+import samucabank.apibank.infrastructure.card.CardDataGenerator;
 import samucabank.apibank.domain.enuns.card.CardFlag;
 import samucabank.apibank.domain.enuns.card.CardOperationType;
 import samucabank.apibank.domain.enuns.card.CardType;
@@ -48,7 +48,7 @@ public class CardService {
 
     private final ModelMapper mapper;
 
-    private final CardLimitManager cardLimitManager;
+    private final CardLimitAdjustmentService cardLimitManager;
 
     public Card findById(final String id) {
         return cardRepository.findById(id)
