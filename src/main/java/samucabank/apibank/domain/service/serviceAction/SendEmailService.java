@@ -1,4 +1,4 @@
-package samucabank.apibank.domain.service.email;
+package samucabank.apibank.domain.service.serviceAction;
 
 import lombok.Builder;
 import lombok.Getter;

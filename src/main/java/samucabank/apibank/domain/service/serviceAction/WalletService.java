@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.BalanceOperationRequest;
 import samucabank.apibank.api.dtos.response.WalletResponse;
-import samucabank.apibank.domain.enuns.wallet.Currency;
+import samucabank.apibank.domain.enums.wallet.Currency;
 import samucabank.apibank.domain.model.User;
 import samucabank.apibank.domain.model.Wallet;
 import samucabank.apibank.domain.repositories.WalletRepository;

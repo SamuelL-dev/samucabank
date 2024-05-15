@@ -2,7 +2,7 @@ package samucabank.apibank.domain.service.businessRule.card.transaction;
 
 
 import org.springframework.stereotype.Component;
-import samucabank.apibank.domain.enuns.card.CardOperationType;
+import samucabank.apibank.domain.enums.card.CardOperationType;
 import samucabank.apibank.domain.service.customException.transaction.InsufficientBalanceException;
 
 @Component

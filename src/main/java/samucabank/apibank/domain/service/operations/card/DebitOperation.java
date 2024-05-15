@@ -1,7 +1,7 @@
 package samucabank.apibank.domain.service.operations.card;
 
 import org.springframework.stereotype.Component;
-import samucabank.apibank.domain.enuns.card.CardOperationType;
+import samucabank.apibank.domain.enums.card.CardOperationType;
 
 @Component
 public class DebitOperation implements CardOperation {
