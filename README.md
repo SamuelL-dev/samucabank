@@ -10,6 +10,7 @@
 - Nginx: Load balancer para gerenciamento de tráfego.
 - Mailtrap: Para testes de envio de e-mails.
 - Maven: Para build e gerenciamento de dependências.
+- Apache FreeMarker: Para simplificar a geração dinâmica de conteúdo em templates para e-mails.
 
 # Configuração e Execução
 
