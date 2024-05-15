@@ -3,6 +3,7 @@ package samucabank.apibank.domain.listener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 import samucabank.apibank.domain.event.UserRegisteredEvent;
 import samucabank.apibank.domain.model.User;
 import samucabank.apibank.domain.service.serviceAction.SendEmailService;
@@ -16,7 +17,7 @@ public class UserRegisteredListener {
 
     private final SendEmailService sendEmailService;
 
-    @EventListener
+    @TransactionalEventListener
     public void whenRegisteringUser(final UserRegisteredEvent event) {
         final User user = event.getUser();
 
