@@ -9,7 +9,6 @@ import samucabank.apibank.domain.model.Wallet;
 import samucabank.apibank.domain.repositories.TransactionRepository;
 import samucabank.apibank.domain.service.businessRule.wallet.transaction.TransactionValidator;
 import samucabank.apibank.domain.service.businessRule.wallet.transaction.TransactionValidatorArgs;
-import samucabank.apibank.domain.service.email.PaymentEmailService;
 import samucabank.apibank.domain.service.operations.transaction.TransactionOperation;
 import samucabank.apibank.domain.service.operations.transaction.TransactionOperationArgs;
 
@@ -27,7 +26,6 @@ public class TransactionService {
 
     private final List<TransactionValidator> transactionValidator;
 
-    private final PaymentEmailService emailService;
 
 
     @Transactional
@@ -54,9 +52,10 @@ public class TransactionService {
                         amount
                 )));
 
-        this.emailService.sendEmail(amount, sender.getUser().getEmail());
+        transaction.paymentConfirmedEvent();
 
         this.transactionRepository.save(transaction);
+
     }
 
     private Transaction createNewTransaction(final Wallet sender, final Wallet receiver, final Integer amount) {

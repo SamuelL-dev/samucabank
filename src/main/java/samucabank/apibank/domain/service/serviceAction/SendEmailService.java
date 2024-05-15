@@ -1,11 +1,11 @@
 package samucabank.apibank.domain.service.email;
 
-import jakarta.mail.MessagingException;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Singular;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface SendEmailService {
@@ -24,5 +24,8 @@ public interface SendEmailService {
 
         @NonNull
         private String body;
+
+        @Singular
+        private Map<String, Object> variables;
     }
 }

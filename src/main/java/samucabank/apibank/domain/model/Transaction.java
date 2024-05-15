@@ -3,6 +3,8 @@ package samucabank.apibank.domain.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
+import samucabank.apibank.domain.event.PaymentConfirmedEvent;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @EqualsAndHashCode(of = "id")
 @Entity(name = "tb_transaction")
-public class Transaction {
+public class Transaction extends AbstractAggregateRoot<Transaction> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,6 +36,10 @@ public class Transaction {
 
     @CreationTimestamp
     private LocalDateTime transactionDate;
+
+    public void paymentConfirmedEvent() {
+        this.registerEvent(new PaymentConfirmedEvent(this));
+    }
 
     @Builder
     public Transaction(Wallet sender, Wallet receiver, Integer amount) {
