@@ -4,6 +4,7 @@ package samucabank.apibank.domain.listener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionalEventListener;
 import samucabank.apibank.domain.event.PaymentConfirmedEvent;
 import samucabank.apibank.domain.model.Transaction;
 import samucabank.apibank.domain.service.serviceAction.SendEmailService;
@@ -16,7 +17,7 @@ public class PaymentConfirmedListener {
 
     private final SendEmailService sendEmailService;
 
-    @EventListener
+    @TransactionalEventListener
     public void whenMakingPayment(PaymentConfirmedEvent event) {
         final Transaction transaction = event.getTransaction();
 
