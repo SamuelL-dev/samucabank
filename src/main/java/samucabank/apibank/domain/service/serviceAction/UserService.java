@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.UserRequest;
 import samucabank.apibank.api.dtos.response.UserResponse;
-import samucabank.apibank.domain.service.email.CreatedAccountEmailService;
 import samucabank.apibank.infrastructure.viacep.ViaCepClientImpl;
 import samucabank.apibank.domain.model.Address;
 import samucabank.apibank.domain.model.User;
@@ -35,7 +34,6 @@ public class UserService {
 
     private final ScoreCalculationService calculateScore;
 
-    private final CreatedAccountEmailService emailService;
 
 
     public Page<UserResponse> findAll(Pageable pageable) {
@@ -68,7 +66,7 @@ public class UserService {
         final Address address = viaCepService.saveAddressFromCep(data.getCep(), data.getAddressNumber());
         user.setAddress(address);
 
-        this.emailService.sendEmail(user.getFirstName(), user.getEmail());
+        user.userRegisteredEvent();
 
         return mapper.map(this.userRepository.save(user), UserResponse.class);
     }

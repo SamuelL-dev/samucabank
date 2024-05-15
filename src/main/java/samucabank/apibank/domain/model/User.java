@@ -2,8 +2,10 @@ package samucabank.apibank.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import samucabank.apibank.domain.enuns.user.Gender;
-import samucabank.apibank.domain.enuns.user.MaritalStatus;
+import org.springframework.data.domain.AbstractAggregateRoot;
+import samucabank.apibank.domain.enums.user.Gender;
+import samucabank.apibank.domain.enums.user.MaritalStatus;
+import samucabank.apibank.domain.event.UserRegisteredEvent;
 
 import java.time.LocalDate;
 
@@ -13,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode(of = "id")
 @Entity(name = "tb_user")
-public class User {
+public class User extends AbstractAggregateRoot<User> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -60,4 +62,8 @@ public class User {
 
     @OneToOne(mappedBy = "user")
     private Wallet wallet;
+
+    public void userRegisteredEvent(){
+        this.registerEvent(new UserRegisteredEvent(this));
+    }
 }
