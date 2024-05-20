@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import samucabank.apibank.api.dtos.response.UserResponse;
 import samucabank.apibank.domain.service.serviceAction.UserService;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/users")
@@ -32,7 +34,9 @@ public class UserController {
     @Operation(summary = "Find user by ID", description = "Find a user by its ID", method = "GET")
     public ResponseEntity<UserResponse> findById(@PathVariable("id") final String id) {
         final UserResponse user = userService.findByIdDTO(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(24, TimeUnit.HOURS))
+                .body(user);
     }
 
     @PostMapping
