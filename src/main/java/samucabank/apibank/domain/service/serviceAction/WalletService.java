@@ -51,7 +51,6 @@ public class WalletService {
         this.registerWalletValidators.forEach(v -> v.validate(new RegisterWalletArgs(user)));
 
         final Wallet wallet = this.createNewWallet(user);
-        user.setWallet(wallet);
 
         return mapper.map(this.walletRepository.save(wallet), WalletResponse.class);
     }

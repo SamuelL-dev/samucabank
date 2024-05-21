@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import samucabank.apibank.api.dtos.request.TransactionRequest;
 import samucabank.apibank.api.dtos.response.StatementDetailsResponse;
 import samucabank.apibank.api.dtos.response.TransactionResponse;
-import samucabank.apibank.domain.enuns.transaction.TransactionStatus;
+import samucabank.apibank.domain.enums.transaction.TransactionStatus;
 import samucabank.apibank.domain.model.Transaction;
 import samucabank.apibank.domain.model.Wallet;
 import samucabank.apibank.domain.repositories.TransactionRepository;
@@ -48,7 +48,7 @@ public class TransactionController {
     @PostMapping
     @Operation(summary = "Create transaction", description = "Creating a transaction by wallet ID", method = "POST")
     public ResponseEntity<TransactionResponse> createTransactionForWallet(@RequestBody @Valid final TransactionRequest request) {
-        this.transactionService.createTransaction(request);
+        this.transactionService.save(request);
 
         final TransactionResponse response = new TransactionResponse(TransactionStatus.SUCESS, request.description());
 

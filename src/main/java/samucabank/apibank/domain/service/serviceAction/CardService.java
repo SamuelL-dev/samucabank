@@ -69,7 +69,6 @@ public class CardService {
         this.cardEligibilityValidator.forEach(it -> it.checkEligibility(new CardEligibilityArgs(user, card)));
 
         this.cardLimitManager.adjustCardLimitBasedOnUserScore(card, user.getScore());
-        user.setCard(card);
 
         return mapper.map(this.cardRepository.save(card), CardResponse.class);
     }

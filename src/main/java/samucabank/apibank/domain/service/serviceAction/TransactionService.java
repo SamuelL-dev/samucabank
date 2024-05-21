@@ -29,7 +29,7 @@ public class TransactionService {
 
 
     @Transactional
-    public void createTransaction(final TransactionRequest data) {
+    public void save(final TransactionRequest data) {
         final Wallet sender = walletService.findById(data.senderId());
 
         final Integer amount = data.amount();
@@ -43,7 +43,7 @@ public class TransactionService {
                         amount
                 )));
 
-        final Transaction transaction = this.createNewTransaction(sender, receiver, amount);
+        final Transaction transaction = this.createTransaction(sender, receiver, amount);
 
         this.transactionOperation.forEach
                 (it -> it.applyTransactionOperation(new TransactionOperationArgs(
@@ -55,10 +55,9 @@ public class TransactionService {
         transaction.paymentConfirmedEvent();
 
         this.transactionRepository.save(transaction);
-
     }
 
-    private Transaction createNewTransaction(final Wallet sender, final Wallet receiver, final Integer amount) {
+    private Transaction createTransaction(final Wallet sender, final Wallet receiver, final Integer amount) {
         return Transaction.builder()
                 .sender(sender)
                 .receiver(receiver)
