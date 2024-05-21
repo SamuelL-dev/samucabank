@@ -61,10 +61,10 @@ public class CardService {
     }
 
     @Transactional
-    public CardResponse register(final String userId) {
+    public CardResponse save(final String userId) {
         final User user = userService.findById(userId);
 
-        final Card card = this.createNewCard(user);
+        final Card card = this.createCard(user);
 
         this.cardEligibilityValidator.forEach(it -> it.checkEligibility(new CardEligibilityArgs(user, card)));
 
@@ -111,7 +111,7 @@ public class CardService {
         this.cardRepository.delete(card);
     }
 
-    private Card createNewCard(final User user) {
+    private Card createCard(final User user) {
         return Card.builder()
                 .cardNumber(cardDataGenerator.generateCardNumber())
                 .cvv(cardDataGenerator.generateCVV())

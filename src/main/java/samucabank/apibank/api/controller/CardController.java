@@ -28,7 +28,7 @@ public class CardController {
     @PostMapping("/users/{userId}")
     @Operation(summary = "Create card by user ID", description = "Creating a new card", method = "POST")
     public ResponseEntity<CardResponse> createCardForUser(@PathVariable("userId") final String userId) {
-        this.cardService.register(userId);
+        this.cardService.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
