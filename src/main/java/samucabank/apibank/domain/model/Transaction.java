@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Entity(name = "tb_transaction")
 public class Transaction extends AbstractAggregateRoot<Transaction> {
 
