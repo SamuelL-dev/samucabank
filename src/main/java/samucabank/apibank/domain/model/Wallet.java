@@ -3,7 +3,7 @@ package samucabank.apibank.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import samucabank.apibank.domain.enuns.wallet.Currency;
+import samucabank.apibank.domain.enums.wallet.Currency;
 
 
 
