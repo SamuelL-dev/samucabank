@@ -1,22 +1,20 @@
 package samucabank.apibank.domain.service.serviceAction;
 
-import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.UserRequest;
 import samucabank.apibank.api.dtos.response.UserResponse;
-import samucabank.apibank.infrastructure.viacep.ViaCepClientImpl;
 import samucabank.apibank.domain.model.Address;
 import samucabank.apibank.domain.model.User;
 import samucabank.apibank.domain.repositories.UserRepository;
 import samucabank.apibank.domain.service.businessRule.user.register.RegisterUserArgs;
 import samucabank.apibank.domain.service.businessRule.user.register.RegisterUserValidator;
 import samucabank.apibank.domain.service.customException.user.UserNotFoundException;
+import samucabank.apibank.infrastructure.viacep.ViaCepClientImpl;
 
 import java.util.List;
 
@@ -34,8 +32,6 @@ public class UserService {
 
     private final ScoreCalculationService calculateScore;
 
-
-
     public Page<UserResponse> findAll(Pageable pageable) {
         return userRepository.findAll(pageable).
                 map(it -> mapper.map(it, UserResponse.class));
@@ -52,7 +48,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse register(final UserRequest data) {
+    public UserResponse save(final UserRequest data) {
         final User user = mapper.map(data, User.class);
 
         this.registerUserValidation.forEach

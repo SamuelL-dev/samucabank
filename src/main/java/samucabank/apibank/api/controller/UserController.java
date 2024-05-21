@@ -42,7 +42,7 @@ public class UserController {
     @PostMapping
     @Operation(summary = "Create user", description = "Creating a new user", method = "POST")
     public ResponseEntity<UserResponse> register(@RequestBody @Valid final UserRequest data) {
-        this.userService.register(data);
+        this.userService.save(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
