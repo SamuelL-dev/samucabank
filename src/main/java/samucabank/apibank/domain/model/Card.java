@@ -2,8 +2,8 @@ package samucabank.apibank.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import samucabank.apibank.domain.enuns.card.CardFlag;
-import samucabank.apibank.domain.enuns.card.CardType;
+import samucabank.apibank.domain.enums.card.CardFlag;
+import samucabank.apibank.domain.enums.card.CardType;
 
 import java.time.LocalDate;
 
