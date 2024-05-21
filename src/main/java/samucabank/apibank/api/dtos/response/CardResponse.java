@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import samucabank.apibank.domain.enuns.card.CardFlag;
-import samucabank.apibank.domain.enuns.card.CardType;
+import samucabank.apibank.domain.enums.card.CardFlag;
+import samucabank.apibank.domain.enums.card.CardType;
 
 import java.time.LocalDate;
 

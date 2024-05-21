@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import samucabank.apibank.domain.enuns.user.Gender;
-import samucabank.apibank.domain.enuns.user.MaritalStatus;
+import samucabank.apibank.domain.enums.user.Gender;
+import samucabank.apibank.domain.enums.user.MaritalStatus;
 import samucabank.apibank.domain.model.Address;
 
 import java.time.LocalDate;

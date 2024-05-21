@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import samucabank.apibank.domain.enuns.transaction.TransactionStatus;
+import samucabank.apibank.domain.enums.transaction.TransactionStatus;
 
 import java.time.LocalDateTime;
 

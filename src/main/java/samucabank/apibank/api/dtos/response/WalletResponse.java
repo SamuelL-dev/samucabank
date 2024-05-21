@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import samucabank.apibank.domain.enuns.wallet.Currency;
+import samucabank.apibank.domain.enums.wallet.Currency;
 
 @Getter
 @Setter
