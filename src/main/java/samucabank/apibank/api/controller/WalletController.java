@@ -36,7 +36,7 @@ public class WalletController {
     @PostMapping("/users/{userId}")
     @Operation(summary = "Create wallet by user ID", description = "Creating a wallet by user ID", method = "POST")
     public ResponseEntity<WalletResponse> createWalletForUser(@PathVariable("userId") final String userId) {
-        this.walletService.register(userId);
+        this.walletService.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

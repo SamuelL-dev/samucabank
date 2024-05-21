@@ -45,12 +45,12 @@ public class WalletService {
 
 
     @Transactional
-    public WalletResponse register(final String userId) {
+    public WalletResponse save(final String userId) {
         final User user = userService.findById(userId);
 
         this.registerWalletValidators.forEach(v -> v.validate(new RegisterWalletArgs(user)));
 
-        final Wallet wallet = this.createNewWallet(user);
+        final Wallet wallet = this.createWallet(user);
 
         return mapper.map(this.walletRepository.save(wallet), WalletResponse.class);
     }
@@ -67,7 +67,7 @@ public class WalletService {
                         )));
     }
 
-    private Wallet createNewWallet(final User user) {
+    private Wallet createWallet(final User user) {
         return Wallet.builder()
                 .balance(0)
                 .currency(Currency.BRL)
