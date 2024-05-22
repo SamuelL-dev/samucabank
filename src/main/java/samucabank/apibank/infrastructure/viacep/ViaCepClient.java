@@ -8,7 +8,6 @@ import samucabank.apibank.domain.model.Address;
 
 @FeignClient(name = "viacep", url = "https://viacep.com.br")
 public interface ViaCepClient {
-    @Cacheable("cepCache")
     @GetMapping("/ws/{cep}/json/")
     Address getCepInfo(@PathVariable("cep") String cep);
 }

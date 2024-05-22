@@ -34,9 +34,7 @@ public class UserController {
     @Operation(summary = "Find user by ID", description = "Find a user by its ID", method = "GET")
     public ResponseEntity<UserResponse> findById(@PathVariable("id") final String id) {
         final UserResponse user = userService.findByIdDTO(id);
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(24, TimeUnit.HOURS).cachePrivate())
-                .body(user);
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping
