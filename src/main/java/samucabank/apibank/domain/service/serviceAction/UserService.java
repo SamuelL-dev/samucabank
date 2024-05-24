@@ -14,7 +14,7 @@ import samucabank.apibank.domain.repositories.UserRepository;
 import samucabank.apibank.domain.service.businessRule.user.register.RegisterUserArgs;
 import samucabank.apibank.domain.service.businessRule.user.register.RegisterUserValidator;
 import samucabank.apibank.domain.service.customException.user.UserNotFoundException;
-import samucabank.apibank.infrastructure.viacep.ViaCepClientImpl;
+import samucabank.apibank.infrastructure.viacep.ViaCepService;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class UserService {
 
     private final ModelMapper mapper;
 
-    private final ViaCepClientImpl viaCepService;
+    private final ViaCepService viaCepService;
 
     private final List<RegisterUserValidator> registerUserValidation;
 
