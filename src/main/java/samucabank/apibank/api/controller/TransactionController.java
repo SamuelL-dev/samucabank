@@ -2,6 +2,8 @@ package samucabank.apibank.api.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +34,12 @@ public class TransactionController {
 
 
     @GetMapping("/wallets/{walletId}/statement")
-    @Operation(summary = "Find statement by wallet ID", description = "Find a statement by wallet ID", method = "GET")
+    @Operation(description = "Operation to find the statement by wallet ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Statement found successfully"),
+            @ApiResponse(responseCode = "400", description = "Wallet id not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<StatementDetailsResponse> getStatementByWalletId(@PathVariable("walletId") final String walletId) {
         final Wallet wallet = walletService.findById(walletId);
 
@@ -46,7 +53,14 @@ public class TransactionController {
     }
 
     @PostMapping
-    @Operation(summary = "Create transaction", description = "Creating a transaction by wallet ID", method = "POST")
+    @Operation(description = "Operation to create a transaction for a wallet")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Transaction created successfully"),
+            @ApiResponse(responseCode = "422", description = "Insufficient balance to complete the transaction"),
+            @ApiResponse(responseCode = "400", description = "Wallet id not found"),
+            @ApiResponse(responseCode = "422", description = "Transaction value must be greater than 0"),
+            @ApiResponse(responseCode = "500", description = "Internal error server")
+    })
     public ResponseEntity<TransactionResponse> createTransactionForWallet(@RequestBody @Valid final TransactionRequest request) {
         this.transactionService.save(request);
 
