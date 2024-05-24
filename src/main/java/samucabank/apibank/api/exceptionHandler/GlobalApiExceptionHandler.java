@@ -19,8 +19,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import samucabank.apibank.api.exceptionHandler.beanValidationError.StandardErrorFieldValid;
 import samucabank.apibank.api.exceptionHandler.beanValidationError.ValidationError;
 import samucabank.apibank.api.exceptionHandler.commonStandardError.StandardError;
+import samucabank.apibank.domain.service.customException.card.CardAlreadyRegisteredException;
 import samucabank.apibank.domain.service.customException.card.CardLimitExceededException;
 import samucabank.apibank.domain.service.customException.card.CardNotFoundException;
+import samucabank.apibank.domain.service.customException.card.CardPendingTransactionException;
 import samucabank.apibank.domain.service.customException.transaction.TransactionIdEqualityException;
 import samucabank.apibank.domain.service.customException.user.*;
 import samucabank.apibank.domain.service.customException.transaction.InsufficientBalanceException;
@@ -147,6 +149,19 @@ public class GlobalApiExceptionHandler{
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         return handleException(ex, status, request, ex.getMessage());
     }
+
+    @ExceptionHandler(CardAlreadyRegisteredException.class)
+    private ResponseEntity<StandardError> handleCardAlreadyRegisteredException(CardAlreadyRegisteredException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        return handleException(ex, status, request, ex.getMessage());
+    }
+
+    @ExceptionHandler(CardPendingTransactionException.class)
+    private ResponseEntity<StandardError> handleCardPendingTransactionException(CardPendingTransactionException ex, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.CONFLICT;
+        return handleException(ex, status, request, ex.getMessage());
+    }
+
     @ExceptionHandler(InsufficientBalanceException.class)
     private ResponseEntity<StandardError> handleInsufficientBalanceException(InsufficientBalanceException ex, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;

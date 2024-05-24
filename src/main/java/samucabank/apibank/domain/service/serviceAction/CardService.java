@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.CardTransactionRequest;
 import samucabank.apibank.api.dtos.response.CardResponse;
+import samucabank.apibank.domain.service.businessRule.card.register.RegisterCardArgs;
+import samucabank.apibank.domain.service.businessRule.card.register.RegisterCardValidator;
 import samucabank.apibank.infrastructure.card.CardDataGenerator;
 import samucabank.apibank.domain.enums.card.CardFlag;
 import samucabank.apibank.domain.enums.card.CardOperationType;
@@ -50,6 +52,8 @@ public class CardService {
 
     private final CardLimitAdjustmentService cardLimitManager;
 
+    private final List<RegisterCardValidator> registerCardValidators;
+
     public Card findById(final String id) {
         return cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
@@ -64,6 +68,8 @@ public class CardService {
     public CardResponse save(final String userId) {
         final User user = userService.findById(userId);
 
+        this.registerCardValidators.forEach(it -> it.validate(new RegisterCardArgs(user)));
+
         final Card card = this.createCard(user);
 
         this.cardEligibilityValidator.forEach(it -> it.checkEligibility(new CardEligibilityArgs(user, card)));
@@ -75,11 +81,11 @@ public class CardService {
 
     @Transactional
     public CardResponse createCardTransaction(final String cardId, final CardTransactionRequest data) {
-        Card card = this.findById(cardId);
+        final Card card = this.findById(cardId);
 
-        Wallet wallet = card.getUser().getWallet();
+        final Wallet wallet = card.getUser().getWallet();
 
-        CardOperationType operationType = data.type();
+        final CardOperationType operationType = data.type();
 
         this.cardTransactionValidator.stream()
                 .filter(it -> it.getType() == operationType)
