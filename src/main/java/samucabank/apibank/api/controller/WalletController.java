@@ -2,6 +2,8 @@ package samucabank.apibank.api.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,14 +21,25 @@ public class WalletController {
     private final WalletService walletService;
 
     @GetMapping("/{id}")
-    @Operation(summary = "Find wallet by ID", description = "Find a wallet by its ID", method = "GET")
+    @Operation(description = "Operation to search for the wallet by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Wallet found successfully"),
+            @ApiResponse(responseCode = "400", description = "Wallet not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<WalletResponse> findById(@PathVariable("id") final String id) {
         final WalletResponse wallet = this.walletService.findByIdDTO(id);
         return ResponseEntity.ok(wallet);
     }
 
     @PostMapping("/{walletId}/deposit")
-    @Operation(summary = "Deposit operation", description = "Deposit balance to wallet", method = "POST")
+    @Operation(description = "Operation to deposit balance")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Deposit made successfully"),
+            @ApiResponse(responseCode = "400", description = "Wallet not found"),
+            @ApiResponse(responseCode = "422", description = "The deposit amount must be greater than 0"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<Void> processDeposit(@RequestBody @Valid final BalanceOperationRequest request,
                                                  @PathVariable("walletId") final String walletId) {
         this.walletService.processDeposit(walletId, request);
@@ -34,7 +47,13 @@ public class WalletController {
     }
 
     @PostMapping("/users/{userId}")
-    @Operation(summary = "Create wallet by user ID", description = "Creating a wallet by user ID", method = "POST")
+    @Operation(description = "Operation to create a wallet for user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Wallet created successfully"),
+            @ApiResponse(responseCode = "400", description = "The user id entered was not found"),
+            @ApiResponse(responseCode = "406", description = "This user already has a wallet"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<WalletResponse> createWalletForUser(@PathVariable("userId") final String userId) {
         this.walletService.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
