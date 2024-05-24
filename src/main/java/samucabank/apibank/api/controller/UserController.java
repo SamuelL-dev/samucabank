@@ -1,11 +1,12 @@
 package samucabank.apibank.api.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,6 @@ import samucabank.apibank.api.dtos.response.UserResponse;
 import samucabank.apibank.domain.service.serviceAction.UserService;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,21 +24,36 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    @Operation(summary = "Find all users", description = "Find all users by pageable", method = "GET")
+    @Operation(description = "Paginated search operation for all users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users found successfully"),
+            @ApiResponse(responseCode = "400", description = "Users not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<List<UserResponse>> getAllUsers(Pageable pageable) {
         Page<UserResponse> users = userService.findAll(pageable);
         return ResponseEntity.ok(users.getContent());
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Find user by ID", description = "Find a user by its ID", method = "GET")
+    @Operation(description = "Operation to search for the user by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found successfully"),
+            @ApiResponse(responseCode = "400", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<UserResponse> findById(@PathVariable("id") final String id) {
         final UserResponse user = userService.findByIdDTO(id);
         return ResponseEntity.ok(user);
     }
 
     @PostMapping
-    @Operation(summary = "Create user", description = "Creating a new user", method = "POST")
+    @Operation(description = "Operation to create user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
+            @ApiResponse(responseCode = "406", description = "Data validation error"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<UserResponse> register(@RequestBody @Valid final UserRequest data) {
         this.userService.save(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
