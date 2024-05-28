@@ -52,9 +52,9 @@ public class TransactionService {
                         amount
                 )));
 
-        transaction.paymentConfirmedEvent();
-
         this.transactionRepository.save(transaction);
+
+        transaction.paymentConfirmedEvent();
     }
 
     private Transaction createTransaction(final Wallet sender, final Wallet receiver, final Integer amount) {
