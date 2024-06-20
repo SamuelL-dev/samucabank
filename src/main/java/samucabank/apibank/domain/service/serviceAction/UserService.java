@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import samucabank.apibank.api.dtos.request.UserRequest;
 import samucabank.apibank.api.dtos.response.UserResponse;
@@ -32,7 +33,7 @@ public class UserService {
 
     private final ScoreCalculationService calculateScore;
 
-    public Page<UserResponse> findAll(Pageable pageable) {
+    public Page<UserResponse> findAll(final Pageable pageable) {
         return userRepository.findAll(pageable).
                 map(it -> mapper.map(it, UserResponse.class));
     }
@@ -51,19 +52,19 @@ public class UserService {
     public UserResponse save(final UserRequest data) {
         final User user = mapper.map(data, User.class);
 
-        this.registerUserValidation.forEach
+        registerUserValidation.forEach
                 (v -> v.validate(new RegisterUserArgs(
                         data,
                         userRepository
                 )));
 
-        this.calculateScore.calculateScore(user);
+        calculateScore.calculateScore(user);
 
         final Address address = viaCepService.saveAddressFromCep(data.getCep(), data.getAddressNumber());
         user.setAddress(address);
 
         user.userRegisteredEvent();
 
-        return mapper.map(this.userRepository.save(user), UserResponse.class);
+        return mapper.map(userRepository.save(user), UserResponse.class);
     }
 }

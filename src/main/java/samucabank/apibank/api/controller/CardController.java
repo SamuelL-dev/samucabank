@@ -41,7 +41,7 @@ public class CardController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<CardResponse> createCardForUser(@PathVariable("userId") final String userId) {
-        this.cardService.save(userId);
+        cardService.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -57,7 +57,7 @@ public class CardController {
     })
     public ResponseEntity<CardResponse> createCardTransaction(@PathVariable("id") final String id,
                                                               @RequestBody @Valid final CardTransactionRequest request) {
-        this.cardService.createCardTransaction(id, request);
+        cardService.createCardTransaction(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -70,7 +70,7 @@ public class CardController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<Void> delete(@PathVariable("id") final String id) {
-        this.cardService.delete(id);
+        cardService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

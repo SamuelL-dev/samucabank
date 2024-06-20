@@ -28,7 +28,7 @@ public class WalletController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<WalletResponse> findById(@PathVariable("id") final String id) {
-        final WalletResponse wallet = this.walletService.findByIdDTO(id);
+        final WalletResponse wallet = walletService.findByIdDTO(id);
         return ResponseEntity.ok(wallet);
     }
 
@@ -42,7 +42,7 @@ public class WalletController {
     })
     public ResponseEntity<Void> processDeposit(@RequestBody @Valid final BalanceOperationRequest request,
                                                  @PathVariable("walletId") final String walletId) {
-        this.walletService.processDeposit(walletId, request);
+        walletService.processDeposit(walletId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -55,7 +55,7 @@ public class WalletController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<WalletResponse> createWalletForUser(@PathVariable("userId") final String userId) {
-        this.walletService.save(userId);
+        walletService.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

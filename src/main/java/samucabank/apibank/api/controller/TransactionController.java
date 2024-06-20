@@ -62,7 +62,7 @@ public class TransactionController {
             @ApiResponse(responseCode = "500", description = "Internal error server")
     })
     public ResponseEntity<TransactionResponse> createTransactionForWallet(@RequestBody @Valid final TransactionRequest request) {
-        this.transactionService.save(request);
+        transactionService.save(request);
 
         final TransactionResponse response = new TransactionResponse(TransactionStatus.SUCESS, request.description());
 

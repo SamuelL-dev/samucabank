@@ -55,7 +55,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<UserResponse> register(@RequestBody @Valid final UserRequest data) {
-        this.userService.save(data);
+        userService.save(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

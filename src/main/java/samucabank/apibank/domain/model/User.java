@@ -64,6 +64,6 @@ public class User extends AbstractAggregateRoot<User> {
     private Wallet wallet;
 
     public void userRegisteredEvent(){
-        this.registerEvent(new UserRegisteredEvent(this));
+        registerEvent(new UserRegisteredEvent(this));
     }
 }

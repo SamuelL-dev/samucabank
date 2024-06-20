@@ -27,6 +27,6 @@ public class UserRegisteredListener {
                 .recipient(user.getEmail())
                 .build();
 
-        this.sendEmailService.send(message);
+        sendEmailService.send(message);
     }
 }

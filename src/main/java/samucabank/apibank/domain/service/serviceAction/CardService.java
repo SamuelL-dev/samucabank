@@ -68,15 +68,15 @@ public class CardService {
     public CardResponse save(final String userId) {
         final User user = userService.findById(userId);
 
-        this.registerCardValidators.forEach(it -> it.validate(new RegisterCardArgs(user)));
+        registerCardValidators.forEach(it -> it.validate(new RegisterCardArgs(user)));
 
         final Card card = this.createCard(user);
 
-        this.cardEligibilityValidator.forEach(it -> it.checkEligibility(new CardEligibilityArgs(user, card)));
+        cardEligibilityValidator.forEach(it -> it.checkEligibility(new CardEligibilityArgs(user, card)));
 
-        this.cardLimitManager.adjustCardLimitBasedOnUserScore(card, user.getScore());
+        cardLimitManager.adjustCardLimitBasedOnUserScore(card, user.getScore());
 
-        return mapper.map(this.cardRepository.save(card), CardResponse.class);
+        return mapper.map(cardRepository.save(card), CardResponse.class);
     }
 
     @Transactional
@@ -87,7 +87,7 @@ public class CardService {
 
         final CardOperationType operationType = data.type();
 
-        this.cardTransactionValidator.stream()
+        cardTransactionValidator.stream()
                 .filter(it -> it.getType() == operationType)
                 .forEach(it -> it.validate(new CardTransactionArgs(
                         data,
@@ -95,7 +95,7 @@ public class CardService {
                         wallet
                 )));
 
-        this.cardOperation.stream()
+        cardOperation.stream()
                 .filter(it -> it.getType() == operationType)
                 .forEach(o -> o.applyCardTransactionOperation
                         (new CardOperationArgs(
@@ -104,7 +104,7 @@ public class CardService {
                                 wallet
                         )));
 
-        return mapper.map(this.cardRepository.save(card), CardResponse.class);
+        return mapper.map(cardRepository.save(card), CardResponse.class);
     }
 
     @Transactional
@@ -112,9 +112,9 @@ public class CardService {
         final Card card = cardRepository.findById(id)
                 .orElseThrow(() -> new CardNotFoundException(id));
 
-        this.deleteCardValidator.forEach(it -> it.validate(new DeleteCardArgs(card)));
+        deleteCardValidator.forEach(it -> it.validate(new DeleteCardArgs(card)));
 
-        this.cardRepository.delete(card);
+        cardRepository.delete(card);
     }
 
     private Card createCard(final User user) {

@@ -38,7 +38,7 @@ public class Transaction extends AbstractAggregateRoot<Transaction> {
     private LocalDateTime transactionDate;
 
     public void paymentConfirmedEvent() {
-        this.registerEvent(new PaymentConfirmedEvent(this));
+        registerEvent(new PaymentConfirmedEvent(this));
     }
 
     @Builder

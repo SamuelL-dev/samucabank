@@ -48,18 +48,18 @@ public class WalletService {
     public WalletResponse save(final String userId) {
         final User user = userService.findById(userId);
 
-        this.registerWalletValidators.forEach(v -> v.validate(new RegisterWalletArgs(user)));
+        registerWalletValidators.forEach(v -> v.validate(new RegisterWalletArgs(user)));
 
         final Wallet wallet = this.createWallet(user);
 
-        return mapper.map(this.walletRepository.save(wallet), WalletResponse.class);
+        return mapper.map(walletRepository.save(wallet), WalletResponse.class);
     }
 
     @Transactional
     public void processDeposit(final String walletId, final BalanceOperationRequest request) {
         final Wallet wallet = findById(walletId);
 
-        this.cashFlowOperations.stream()
+        cashFlowOperations.stream()
                 .forEach(it -> it.execute(
                         new CashFlowOperationArgs(
                                 wallet,

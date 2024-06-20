@@ -27,7 +27,6 @@ public class TransactionService {
     private final List<TransactionValidator> transactionValidator;
 
 
-
     @Transactional
     public void save(final TransactionRequest data) {
         final Wallet sender = walletService.findById(data.senderId());
@@ -36,7 +35,7 @@ public class TransactionService {
 
         final Wallet receiver = walletService.findById(data.receiverId());
 
-        this.transactionValidator.forEach
+        transactionValidator.forEach
                 (it -> it.validate(new TransactionValidatorArgs(
                         sender,
                         receiver,
@@ -45,14 +44,14 @@ public class TransactionService {
 
         final Transaction transaction = this.createTransaction(sender, receiver, amount);
 
-        this.transactionOperation.forEach
+        transactionOperation.forEach
                 (it -> it.applyTransactionOperation(new TransactionOperationArgs(
                         sender,
                         receiver,
                         amount
                 )));
 
-        this.transactionRepository.save(transaction);
+        transactionRepository.save(transaction);
 
         transaction.paymentConfirmedEvent();
     }
