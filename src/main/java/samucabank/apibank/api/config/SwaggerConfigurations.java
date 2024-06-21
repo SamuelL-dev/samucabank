@@ -1,4 +1,4 @@
-package samucabank.apibank.api.config;
+package samucabank.apibank.api.config.swagger;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
