@@ -1,6 +1,6 @@
 # SAMUCABANK é um sistema bancário simulado desenvolvido para fins educativos, projetado para aprimorar habilidades de programação e explorar conceitos relacionados ao desenvolvimento de sistemas bancários.
 
-# Tecnologias Usadas
+# Tecnologias utilizadas
 - Spring Boot: Framework para desenvolvimento do backend.
 - Spring JPA: Para interações com o banco de dados usando JPA/Hibernate.
 - Docker & Docker Compose: Para criar ambientes consistentes e facilitar o desenvolvimento e a execução do projeto.
