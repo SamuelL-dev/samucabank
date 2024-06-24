@@ -18,6 +18,7 @@ CREATE TABLE tb_user (
     gender VARCHAR(10) NOT NULL,
     marital_status VARCHAR(50) NOT NULL,
     score bigint,
+    role VARCHAR(10),
 
     primary key (id)
 );
