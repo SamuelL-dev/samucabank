@@ -50,7 +50,7 @@ public class WalletService {
 
         registerWalletValidators.forEach(v -> v.validate(new RegisterWalletArgs(user)));
 
-        final Wallet wallet = this.createWallet(user);
+        final Wallet wallet = this.createForUser(user);
 
         return mapper.map(walletRepository.save(wallet), WalletResponse.class);
     }
@@ -67,7 +67,7 @@ public class WalletService {
                         )));
     }
 
-    private Wallet createWallet(final User user) {
+    private Wallet createForUser(final User user) {
         return Wallet.builder()
                 .balance(0)
                 .currency(Currency.BRL)
