@@ -32,4 +32,9 @@ public class Address {
 
     @Column(nullable = false)
     private String uf;
+
+    public Address(String cep, String numero) {
+        this.cep = cep;
+        this.numero = numero;
+    }
 }
