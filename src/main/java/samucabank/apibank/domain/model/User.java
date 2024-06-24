@@ -5,10 +5,12 @@ import lombok.*;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import samucabank.apibank.domain.enums.user.Gender;
 import samucabank.apibank.domain.enums.user.MaritalStatus;
+import samucabank.apibank.domain.enums.user.UserRole;
 import samucabank.apibank.domain.event.UserRegisteredEvent;
 
 import java.time.LocalDate;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -63,7 +65,15 @@ public class User extends AbstractAggregateRoot<User> {
     @OneToOne(mappedBy = "user")
     private Wallet wallet;
 
-    public void userRegisteredEvent(){
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
+
+    public void addRole(UserRole role) {
+        this.role = role;
+    }
+
+    public void userRegisteredEvent() {
         registerEvent(new UserRegisteredEvent(this));
     }
 }
