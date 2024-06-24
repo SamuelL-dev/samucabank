@@ -68,11 +68,18 @@ public class CardService {
     public CardResponse save(final String userId) {
         final User user = userService.findById(userId);
 
-        registerCardValidators.forEach(it -> it.validate(new RegisterCardArgs(user)));
+        registerCardValidators.forEach(it -> it.validate(
+                new RegisterCardArgs(
+                        user
+                )));
 
-        final Card card = this.createCard(user);
+        final Card card = this.createForUser(user);
 
-        cardEligibilityValidator.forEach(it -> it.checkEligibility(new CardEligibilityArgs(user, card)));
+        cardEligibilityValidator.forEach(it -> it.checkEligibility(
+                new CardEligibilityArgs(
+                        user,
+                        card
+                )));
 
         cardLimitManager.adjustCardLimitBasedOnUserScore(card, user.getScore());
 
@@ -117,7 +124,7 @@ public class CardService {
         cardRepository.delete(card);
     }
 
-    private Card createCard(final User user) {
+    private Card createForUser(final User user) {
         return Card.builder()
                 .cardNumber(cardDataGenerator.generateCardNumber())
                 .cvv(cardDataGenerator.generateCVV())
