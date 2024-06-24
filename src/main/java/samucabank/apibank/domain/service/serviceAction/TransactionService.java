@@ -42,7 +42,7 @@ public class TransactionService {
                         amount
                 )));
 
-        final Transaction transaction = this.createTransaction(sender, receiver, amount);
+        final Transaction transaction = this.create(sender, receiver, amount);
 
         transactionOperation.forEach
                 (it -> it.applyTransactionOperation(new TransactionOperationArgs(
@@ -56,7 +56,7 @@ public class TransactionService {
         transaction.paymentConfirmedEvent();
     }
 
-    private Transaction createTransaction(final Wallet sender, final Wallet receiver, final Integer amount) {
+    private Transaction create(final Wallet sender, final Wallet receiver, final Integer amount) {
         return Transaction.builder()
                 .sender(sender)
                 .receiver(receiver)
