@@ -11,6 +11,8 @@
 - Mailtrap: Para testes de envio de e-mails.
 - Maven: Para build e gerenciamento de dependências.
 - Apache FreeMarker: Para simplificar a geração dinâmica de conteúdo em templates para e-mails.
+- Spring Security: Autenticação e autorização para a aplicação, garantindo a segurança dos dados e recursos.
+- CORS: Configuração de Cross-Origin Resource Sharing para permitir que recursos do backend sejam acessíveis de diferentes origens, facilitando a integração com frontend e outras APIs.
 
 # Configuração e Execução
 
