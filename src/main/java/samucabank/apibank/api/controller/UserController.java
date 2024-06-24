@@ -36,7 +36,7 @@ public class UserController implements UserSwagger {
     }
 
     @Override
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody @Valid final UserRequest data) {
         userService.save(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
