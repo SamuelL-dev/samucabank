@@ -1,4 +1,4 @@
-# SAMUCABANK é um sistema bancário simulado que desenvolvi para aprimorar minhas habilidades de proaciogramação e explorar conceitos relnados ao desenvolvimento de sistemas bancários.
+# SAMUCABANK é um sistema bancário simulado que desenvolvi para aprimorar minhas habilidades de programação e explorar conceitos relacionados ao desenvolvimento de sistemas bancários.
 
 # Tecnologias utilizadas
 - Spring Boot: Framework para desenvolvimento do backend.
