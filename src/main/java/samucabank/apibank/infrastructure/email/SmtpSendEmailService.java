@@ -20,7 +20,7 @@ public class SmtpSendEmailService implements SendEmailService {
 
     private final EmailProperties emailProperties;
 
-    private final Configuration freemarkerConfig;
+    private final EmailProcessTemplate emailProcessTemplate;
 
     @Override
     public void send(final Message message) {
@@ -33,7 +33,7 @@ public class SmtpSendEmailService implements SendEmailService {
     }
 
     protected MimeMessage createMimeMessage(final Message message) throws MessagingException {
-        final String body = templateProcess(message);
+        final String body = emailProcessTemplate.templateProcess(message);
 
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -44,14 +44,5 @@ public class SmtpSendEmailService implements SendEmailService {
         helper.setText(body, true);
 
         return mimeMessage;
-    }
-
-    private String templateProcess(final Message message) {
-        try {
-            Template template = freemarkerConfig.getTemplate(message.getBody());
-            return FreeMarkerTemplateUtils.processTemplateIntoString(template, message.getVariables());
-        } catch (Exception e) {
-            throw new EmailException("UUnable to create email template", e);
-        }
     }
 }
