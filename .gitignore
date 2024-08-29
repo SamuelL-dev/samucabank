@@ -25,6 +25,4 @@ replay_pid*
 
 
 data
-.target
-.mvn/wrapper
-.idea
+target
