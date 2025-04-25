@@ -19,26 +19,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController implements UserSwagger {
 
-    private final UserService userService;
+    private final UserService service;
 
     @Override
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAllUsers(Pageable pageable) {
-        Page<UserResponse> users = userService.findAll(pageable);
-        return ResponseEntity.ok(users.getContent());
+        return ResponseEntity.ok(service.findAll(pageable).getContent());
     }
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> findById(@PathVariable("id") final String id) {
-        final UserResponse user = userService.findByIdDTO(id);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(service.findByIdDTO(id));
     }
 
     @Override
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@RequestBody @Valid final UserRequest data) {
-        userService.save(data);
+        service.save(data);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

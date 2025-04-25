@@ -16,27 +16,26 @@ import samucabank.apibank.domain.service.serviceAction.WalletService;
 @RequiredArgsConstructor
 public class WalletController implements WalletSwagger {
 
-    private final WalletService walletService;
+    private final WalletService service;
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<WalletResponse> findById(@PathVariable("id") final String id) {
-        final WalletResponse wallet = walletService.findByIdDTO(id);
-        return ResponseEntity.ok(wallet);
+        return ResponseEntity.ok(service.findByIdDTO(id));
     }
 
     @Override
     @PostMapping("/{walletId}/deposit")
     public ResponseEntity<Void> processDeposit(@RequestBody @Valid final BalanceOperationRequest request,
                                                @PathVariable("walletId") final String walletId) {
-        walletService.processDeposit(walletId, request);
+        service.processDeposit(walletId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override
     @PostMapping("/users/{userId}")
     public ResponseEntity<WalletResponse> createWalletForUser(@PathVariable("userId") final String userId) {
-        walletService.save(userId);
+        service.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

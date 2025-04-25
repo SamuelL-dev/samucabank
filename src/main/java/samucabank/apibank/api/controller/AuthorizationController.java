@@ -20,8 +20,7 @@ public class AuthorizationController {
 
     @PostMapping("/login")
     public ResponseEntity<RecoveryJwtTokenResponse> login(@RequestBody @Valid final AuthenticationRequest request){
-       RecoveryJwtTokenResponse token = userService.authenticateUser(request);
-       return ResponseEntity.ok(token);
+       return ResponseEntity.ok(userService.authenticateUser(request));
     }
 
 }

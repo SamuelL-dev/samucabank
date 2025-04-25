@@ -16,19 +16,18 @@ import samucabank.apibank.domain.service.serviceAction.CardService;
 @RequiredArgsConstructor
 public class CardController implements CardSwagger {
 
-    private final CardService cardService;
+    private final CardService service;
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<CardResponse> findById(@PathVariable("id") final String id) {
-        final CardResponse card = cardService.findByIdDto(id);
-        return ResponseEntity.ok(card);
+        return ResponseEntity.ok(service.findByIdDto(id));
     }
 
     @Override
     @PostMapping("/users/{userId}")
     public ResponseEntity<CardResponse> createCardForUser(@PathVariable("userId") final String userId) {
-        cardService.save(userId);
+        service.save(userId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -36,14 +35,14 @@ public class CardController implements CardSwagger {
     @PostMapping("/{id}")
     public ResponseEntity<CardResponse> createCardTransaction(@PathVariable("id") final String id,
                                                               @RequestBody @Valid final CardTransactionRequest request) {
-        cardService.createTransaction(id, request);
+        service.createTransaction(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") final String id) {
-        cardService.delete(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
