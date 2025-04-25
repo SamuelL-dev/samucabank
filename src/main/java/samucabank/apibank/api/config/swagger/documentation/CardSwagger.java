@@ -56,8 +56,8 @@ public interface CardSwagger {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = StandardError.class)))
     })
-    ResponseEntity<CardResponse> createCardTransaction(@PathVariable("id") final String id,
-                                                       @RequestBody @Valid final CardTransactionRequest request);
+    ResponseEntity<CardResponse> createTransaction(@PathVariable("id") final String id,
+                                                   @RequestBody @Valid final CardTransactionRequest request);
 
     @Operation(description = "Operation to delete card by id")
     @ApiResponses(value = {

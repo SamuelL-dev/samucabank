@@ -33,8 +33,8 @@ public class CardController implements CardSwagger {
 
     @Override
     @PostMapping("/{id}")
-    public ResponseEntity<CardResponse> createCardTransaction(@PathVariable("id") final String id,
-                                                              @RequestBody @Valid final CardTransactionRequest request) {
+    public ResponseEntity<CardResponse> createTransaction(@PathVariable("id") final String id,
+                                                          @RequestBody @Valid final CardTransactionRequest request) {
         service.createTransaction(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
