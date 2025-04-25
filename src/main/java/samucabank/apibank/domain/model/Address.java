@@ -15,23 +15,17 @@ import lombok.Setter;
 @Embeddable
 public class Address {
 
-    @Column(nullable = false)
-    private String cep;
+    @Column(nullable = false) private String cep;
 
-    @Column(nullable = false)
-    private String logradouro;
+    @Column(nullable = false) private String logradouro;
 
-    @Column(nullable = false)
-    private String numero;
+    @Column(nullable = false) private String numero;
 
-    @Column(nullable = false)
-    private String bairro;
+    @Column(nullable = false) private String bairro;
 
-    @Column(nullable = false)
-    private String localidade;
+    @Column(nullable = false) private String localidade;
 
-    @Column(nullable = false)
-    private String uf;
+    @Column(nullable = false) private String uf;
 
     public Address(String cep, String numero) {
         this.cep = cep;

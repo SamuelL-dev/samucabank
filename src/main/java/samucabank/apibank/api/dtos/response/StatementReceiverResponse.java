@@ -25,7 +25,7 @@ public class StatementReceiverResponse {
     public StatementReceiverResponse(Transaction transaction) {
         this.transactionId = transaction.getId();
         this.amount = transaction.getAmount();
-        this.transactionDate = transaction.getTransactionDate();
+        this.transactionDate = transaction.getDate();
         this.from = transaction.getSender().getId();
     }
 }

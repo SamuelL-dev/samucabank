@@ -18,49 +18,55 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionService {
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionRepository repository;
 
     private final WalletService walletService;
 
-    private final List<TransactionOperation> transactionOperation;
+    private final List<TransactionOperation> operations;
 
-    private final List<TransactionValidator> transactionValidator;
+    private final List<TransactionValidator> validators;
 
 
     @Transactional
-    public void save(final TransactionRequest data) {
+    public void save(TransactionRequest data) {
         final Wallet sender = walletService.findById(data.senderId());
 
         final Integer amount = data.amount();
 
         final Wallet receiver = walletService.findById(data.receiverId());
 
-        transactionValidator.forEach
-                (it -> it.validate(new TransactionValidatorArgs(
-                        sender,
-                        receiver,
-                        amount
-                )));
+        validators.forEach(it -> it.validate(
+            new TransactionValidatorArgs(
+                sender,
+                receiver,
+                amount
+            ))
+        );
 
         final Transaction transaction = this.create(sender, receiver, amount);
 
-        transactionOperation.forEach
-                (it -> it.applyTransactionOperation(new TransactionOperationArgs(
-                        sender,
-                        receiver,
-                        amount
-                )));
+        operations.forEach(it -> it.apply(
+            new TransactionOperationArgs(
+                sender,
+                receiver,
+                amount
+            )
+        ));
 
-        transactionRepository.save(transaction);
+        repository.save(transaction);
 
         transaction.paymentConfirmedEvent();
     }
 
-    private Transaction create(final Wallet sender, final Wallet receiver, final Integer amount) {
+    private Transaction create(
+        Wallet sender,
+        Wallet receiver,
+        Integer amount
+    ) {
         return Transaction.builder()
-                .sender(sender)
-                .receiver(receiver)
-                .amount(amount)
-                .build();
+            .sender(sender)
+            .receiver(receiver)
+            .amount(amount)
+            .build();
     }
 }

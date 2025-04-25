@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DepositOperation implements CashFlowOperation {
     @Override
-    public void execute(CashFlowOperationArgs args) {
-            Integer newBalance = args.wallet().getBalance() + args.request().amount();
-            args.wallet().setBalance(newBalance);
+    public void apply(CashFlowOperationArgs args) {
+            args.wallet().setBalance(args.wallet().getBalance() + args.data().amount());
     }
 }

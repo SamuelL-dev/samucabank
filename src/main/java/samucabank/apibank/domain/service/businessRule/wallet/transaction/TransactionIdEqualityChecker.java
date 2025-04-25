@@ -6,9 +6,11 @@ import samucabank.apibank.domain.service.customException.transaction.Transaction
 @Component
 public class TransactionIdEqualityChecker implements TransactionValidator {
     @Override
-    public void validate(final TransactionValidatorArgs args) {
+    public void validate(TransactionValidatorArgs args) {
         if(args.receiver() == args.sender()) {
-            throw new TransactionIdEqualityException("Transactions cannot have the same ID. Make sure each transaction has a unique ID.");
+            throw new TransactionIdEqualityException(
+                "Transactions cannot have the same ID. Make sure each transaction has a unique ID."
+            );
         }
     }
 }

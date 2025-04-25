@@ -33,16 +33,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardService {
 
-    private final CardRepository cardRepository;
+    private final CardRepository repository;
 
+    private final List<CardEligibilityValidator> eligibilityValidators;
 
-    private final List<CardEligibilityValidator> cardEligibilityValidator;
+    private final List<DeleteCardValidator> deleteValidators;
 
-    private final List<DeleteCardValidator> deleteCardValidator;
+    private final List<CardTransactionValidator> transactionValidators;
 
-    private final List<CardTransactionValidator> cardTransactionValidator;
-
-    private final List<CardOperation> cardOperation;
+    private final List<CardOperation> operations;
 
     private final CardDataGenerator cardDataGenerator;
 
@@ -50,89 +49,94 @@ public class CardService {
 
     private final ModelMapper mapper;
 
-    private final CardLimitAdjustmentService cardLimitManager;
+    private final CardLimitAdjustmentService limitManager;
 
-    private final List<RegisterCardValidator> registerCardValidators;
+    private final List<RegisterCardValidator> registerValidators;
 
-    public Card findById(final String id) {
-        return cardRepository.findById(id)
-                .orElseThrow(() -> new CardNotFoundException(id));
+    public Card findById(String id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new CardNotFoundException(id));
     }
 
-    public CardResponse findByIdDto(final String id) {
-        Card card = findById(id);
+    public CardResponse findByIdDto(String id) {
+        final Card card = findById(id);
         return mapper.map(card, CardResponse.class);
     }
 
     @Transactional
-    public CardResponse save(final String userId) {
+    public void save(String userId) {
         final User user = userService.findById(userId);
 
-        registerCardValidators.forEach(it -> it.validate(
-                new RegisterCardArgs(
-                        user
-                )));
+        registerValidators.forEach(it -> it.validate(
+            new RegisterCardArgs(user))
+        );
 
         final Card card = this.createForUser(user);
 
-        cardEligibilityValidator.forEach(it -> it.checkEligibility(
-                new CardEligibilityArgs(
-                        user,
-                        card
-                )));
+        eligibilityValidators.forEach(it -> it.checkEligibility(
+            new CardEligibilityArgs(
+                user,
+                card
+            )
+        ));
 
-        cardLimitManager.adjustCardLimitBasedOnUserScore(card, user.getScore());
+        limitManager.adjustCardLimitBasedOnUserScore(card, user.getScore());
 
-        return mapper.map(cardRepository.save(card), CardResponse.class);
+        mapper.map(repository.save(card), CardResponse.class);
     }
 
     @Transactional
-    public CardResponse createCardTransaction(final String cardId, final CardTransactionRequest data) {
+    public void createTransaction(final String cardId, final CardTransactionRequest data) {
         final Card card = this.findById(cardId);
 
         final Wallet wallet = card.getUser().getWallet();
 
-        final CardOperationType operationType = data.type();
+        final CardOperationType type = data.type();
 
-        cardTransactionValidator.stream()
-                .filter(it -> it.getType() == operationType)
-                .forEach(it -> it.validate(new CardTransactionArgs(
-                        data,
-                        card,
-                        wallet
-                )));
+        transactionValidators.stream()
+            .filter(it -> it.getType() == type)
+            .forEach(it -> it.validate(
+                new CardTransactionArgs(
+                    data,
+                    card,
+                    wallet
+                )
+            ));
 
-        cardOperation.stream()
-                .filter(it -> it.getType() == operationType)
-                .forEach(o -> o.applyCardTransactionOperation
-                        (new CardOperationArgs(
-                                data,
-                                card,
-                                wallet
-                        )));
+        operations.stream()
+            .filter(it -> it.getType() == type)
+            .forEach(it -> it.apply(
+                new CardOperationArgs(
+                    data,
+                    card,
+                    wallet
+                )
+            ));
 
-        return mapper.map(cardRepository.save(card), CardResponse.class);
+        mapper.map(repository.save(card), CardResponse.class);
     }
 
     @Transactional
     public void delete(final String id) {
-        final Card card = cardRepository.findById(id)
-                .orElseThrow(() -> new CardNotFoundException(id));
+        final Card card = repository.findById(id)
+            .orElseThrow(() -> new CardNotFoundException(id));
 
-        deleteCardValidator.forEach(it -> it.validate(new DeleteCardArgs(card)));
+        deleteValidators.forEach(it -> it.validate(
+            new DeleteCardArgs(card)
+        ));
 
-        cardRepository.delete(card);
+        repository.delete(card);
     }
 
-    private Card createForUser(final User user) {
+    private Card createForUser(User user) {
         return Card.builder()
-                .cardNumber(cardDataGenerator.generateCardNumber())
-                .cvv(cardDataGenerator.generateCVV())
-                .expirationDate(cardDataGenerator.generateExpirationDate())
-                .user(user)
-                .cardType(CardType.CREDIT_DEBIT)
-                .cardFlag(CardFlag.MASTERCARD)
-                .build();
+            .cardNumber(cardDataGenerator.generateCardNumber())
+            .cvv(cardDataGenerator.generateCVV())
+            .expirationDate(cardDataGenerator.generateExpirationDate())
+            .user(user)
+            .type(CardType.CREDIT_DEBIT)
+            .flag(CardFlag.MASTERCARD)
+            .build();
     }
 }
 

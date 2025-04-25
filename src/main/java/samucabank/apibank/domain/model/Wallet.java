@@ -5,20 +5,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import samucabank.apibank.domain.enums.wallet.Currency;
 
+import java.util.UUID;
 
 
-@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @Getter
 @Setter
-@Entity(name = "tb_wallet")
+@Entity(name = "Wallets")
 public class Wallet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Setter(AccessLevel.NONE)
-    private String id;
+    private final String id = UUID.randomUUID().toString();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -31,7 +29,11 @@ public class Wallet {
     private User user;
 
     @Builder
-    public Wallet(Currency currency, Integer balance, User user) {
+    public Wallet(
+        Currency currency,
+        Integer balance,
+        User user
+    ) {
         this.currency = currency;
         this.balance = balance;
         this.user = user;

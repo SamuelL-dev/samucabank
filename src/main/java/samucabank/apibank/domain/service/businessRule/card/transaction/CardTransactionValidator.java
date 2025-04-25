@@ -5,5 +5,6 @@ import samucabank.apibank.domain.enums.card.CardOperationType;
 public interface CardTransactionValidator {
 
     CardOperationType getType();
+
     void validate(CardTransactionArgs args);
 }

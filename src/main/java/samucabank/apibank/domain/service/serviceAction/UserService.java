@@ -25,6 +25,7 @@ import samucabank.apibank.domain.service.customException.user.UserNotFoundExcept
 import samucabank.apibank.infrastructure.viacep.ViaCepService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,26 +33,26 @@ public class UserService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
 
     private final ModelMapper mapper;
 
     private final ViaCepService viaCepService;
 
-    private final List<RegisterUserValidator> registerUserValidation;
+    private final List<RegisterUserValidator> registerValidators;
 
     private final ScoreCalculationService calculateScore;
 
     private final TokenService tokenService;
 
     public Page<UserResponse> findAll(final Pageable pageable) {
-        return userRepository.findAll(pageable).
-                map(it -> mapper.map(it, UserResponse.class));
+        return repository.findAll(pageable).
+            map(it -> mapper.map(it, UserResponse.class));
     }
 
     public User findById(final String id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+        return repository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     public UserResponse findByIdDTO(final String id) {
@@ -60,51 +61,73 @@ public class UserService {
     }
 
     public RecoveryJwtTokenResponse authenticateUser(final AuthenticationRequest request) {
-        UsernamePasswordAuthenticationToken usernamePassword =
-                new UsernamePasswordAuthenticationToken(request.email(), request.password());
+        UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(
+            request.email(),
+            request.password()
+        );
 
-        Authentication authentication = authenticationManager.authenticate(usernamePassword);
+        final Authentication authentication = authenticationManager.authenticate(usernamePassword);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         return new RecoveryJwtTokenResponse(tokenService.generateToken(userDetails));
-
     }
 
     @Transactional
     public UserResponse save(final UserRequest data) {
-        registerUserValidation.forEach
-                (v -> v.validate(new RegisterUserArgs(
+        registerValidators.forEach
+            (v -> v.validate(
+                    new RegisterUserArgs(
                         data,
-                        userRepository
-                )));
+                        repository
+                    )
+                )
+            );
 
-        String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
+        final String password = Optional.of(data)
+            .map(UserRequest::getPassword)
+            .orElseThrow(() -> new IllegalArgumentException("Password cannot be null"));
 
-        final Address address = viaCepService.saveAddressFromCep(data.getCep(), data.getAddressNumber());
+        final String encryptedPassword = new BCryptPasswordEncoder()
+            .encode(password);
+
+        final String cep = Optional.of(data)
+            .map(UserRequest::getCep)
+            .orElseThrow(() -> new IllegalArgumentException("User cep cannot be null"));
+
+        final String addressNumber = Optional.of(data)
+            .map(UserRequest::getAddressNumber)
+            .orElseThrow(() -> new IllegalArgumentException("User addressNumber cannot be null"));
+
+        final Address address = viaCepService.saveAddressByCep(cep, addressNumber);
 
         final User user = this.create(data, encryptedPassword, address);
+
         user.addRole(UserRole.USER);
 
         calculateScore.calculateScore(user);
 
         user.userRegisteredEvent();
 
-        return mapper.map(userRepository.save(user), UserResponse.class);
+        return mapper.map(repository.save(user), UserResponse.class);
     }
 
-    private User create(final UserRequest data, String encryptedPassword, final Address address) {
+    private User create(
+        UserRequest data,
+        String encryptedPassword,
+        Address address
+    ) {
         return User.builder()
-                .firstName(data.getFirstName())
-                .lastName(data.getLastName())
-                .email(data.getEmail())
-                .password(encryptedPassword)
-                .address(address)
-                .document(data.getDocument())
-                .phoneNumber(data.getPhoneNumber())
-                .dateOfBirth(data.getDateOfBirth())
-                .maritalStatus(data.getMaritalStatus())
-                .gender(data.getGender())
-                .build();
+            .firstName(data.getFirstName())
+            .lastName(data.getLastName())
+            .email(data.getEmail())
+            .password(encryptedPassword)
+            .address(address)
+            .document(data.getDocument())
+            .phoneNumber(data.getPhoneNumber())
+            .dateOfBirth(data.getDateOfBirth())
+            .maritalStatus(data.getMaritalStatus())
+            .gender(data.getGender())
+            .build();
     }
 }

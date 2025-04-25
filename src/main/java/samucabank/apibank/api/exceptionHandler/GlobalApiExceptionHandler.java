@@ -35,27 +35,41 @@ import java.util.List;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
-public class GlobalApiExceptionHandler{
+public class GlobalApiExceptionHandler {
 
     private final MessageSource messageSource;
 
     private final Logger logger = LoggerFactory.getLogger(GlobalApiExceptionHandler.class);
 
-    public ResponseEntity<StandardError> handleException(Exception ex, HttpStatus status, HttpServletRequest request, String error) {
-        StandardError err = new StandardError(Instant.now(), status.value(), error, request.getRequestURI());
+    public ResponseEntity<StandardError> handleException(
+        Exception ex,
+        HttpStatus status,
+        HttpServletRequest request,
+        String error
+    ) {
+        final StandardError err = new StandardError(
+            Instant.now(),
+            status.value(),
+            error,
+            request.getRequestURI()
+        );
+
         log(ex);
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<ValidationError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-        String path = request.getRequestURI();
-        String error = "One or more parameters are invalid";
+    private ResponseEntity<ValidationError> handleMethodArgumentNotValid(
+        MethodArgumentNotValidException ex,
+        HttpServletRequest request
+    ) {
+        final HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        final String path = request.getRequestURI();
+        final String error = "One or more parameters are invalid";
 
-        List<StandardErrorFieldValid> errorFieldValids = new ArrayList<>();
+        final List<StandardErrorFieldValid> errorFieldValids = new ArrayList<>();
 
-        List<FieldError> fieldErrors = ex.getFieldErrors();
+        final List<FieldError> fieldErrors = ex.getFieldErrors();
         fieldErrors.forEach(fieldError -> {
             String field = fieldError.getField();
             String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
@@ -64,119 +78,156 @@ public class GlobalApiExceptionHandler{
 
         log(ex);
 
-        return ResponseEntity.status(status).body(new ValidationError(Instant.now(), status.value(), error, path, errorFieldValids));
+        return ResponseEntity.status(status)
+            .body(
+                new ValidationError(
+                    Instant.now(),
+                    status.value(),
+                    error,
+                    path,
+                    errorFieldValids
+                )
+            );
     }
 
     @ExceptionHandler(Exception.class)
     private ResponseEntity<StandardError> handleUncaught(Exception ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        final HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         String error = "An unexpected system error has occurred. Try again and if the problem persists, contact your system administrator";
-        return handleException(ex, status, request, error);
+        return handleException(
+            ex,
+            status,
+            request,
+            error
+        );
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     private ResponseEntity<StandardError> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
-        String error = "Method not allowed";
+        final HttpStatus status = HttpStatus.METHOD_NOT_ALLOWED;
+        final String error = "Method not allowed";
         return handleException(ex, status, request, error);
     }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     private ResponseEntity<StandardError> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        String error = String.format("The resource %s you tried to access is non-existent", ex.getRequestURL());
+        final HttpStatus status = HttpStatus.NOT_FOUND;
+        final String error = String.format("The resource %s you tried to access is non-existent", ex.getRequestURL());
         return handleException(ex, status, request, error);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     private ResponseEntity<StandardError> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        String error = "Information being passed wrong to the server";
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        final String error = "Information being passed wrong to the server";
         return handleException(ex, status, request, error);
     }
 
     @ExceptionHandler(WalletAlreadyRegisteredException.class)
     public ResponseEntity<StandardError> handleWalletAlreadyRegisteredException(WalletAlreadyRegisteredException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(WalletNotFoundException.class)
     public ResponseEntity<StandardError> handleWalletNotFoundException(WalletNotFoundException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleException(ex, status, request, ex.getMessage());
     }
 
-
     @ExceptionHandler(UserNotFoundException.class)
-    private ResponseEntity<StandardError> handleUserNotFoundException(UserNotFoundException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        return handleException(ex, status, request, ex.getMessage());
+    private ResponseEntity<StandardError> handleUserNotFoundException(
+        UserNotFoundException ex,
+        HttpServletRequest request
+    ) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        return handleException(
+            ex,
+            status,
+            request,
+            ex.getMessage()
+        );
     }
 
     @ExceptionHandler(AgeEligibleForRegistrationException.class)
-    private ResponseEntity<StandardError> handleAgeEligibleForRegistrationException(AgeEligibleForRegistrationException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        return handleException(ex, status, request, ex.getMessage());
+    private ResponseEntity<StandardError> handleAgeEligibleForRegistrationException(
+        AgeEligibleForRegistrationException ex,
+        HttpServletRequest request
+    ) {
+        final HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return handleException(
+            ex,
+            status,
+            request,
+            ex.getMessage()
+        );
     }
 
     @ExceptionHandler(PhoneAlreadyRegisteredException.class)
-    private ResponseEntity<StandardError> handlePhoneAlreadyException(PhoneAlreadyRegisteredException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
-        return handleException(ex, status, request, ex.getMessage());
+    private ResponseEntity<StandardError> handlePhoneAlreadyException(
+        PhoneAlreadyRegisteredException ex,
+        HttpServletRequest request
+    ) {
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        return handleException(
+            ex,
+            status,
+            request,
+            ex.getMessage()
+        );
     }
 
     @ExceptionHandler(EmailAlreadyRegisteredException.class)
     private ResponseEntity<StandardError> handleEmailAlreadyException(EmailAlreadyRegisteredException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(DocumentAlreadyRegisteredException.class)
     private ResponseEntity<StandardError> handleDocumentAlreadyException(DocumentAlreadyRegisteredException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(CardNotFoundException.class)
     private ResponseEntity<StandardError> handleCardNotFoundException(CardNotFoundException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(CardLimitExceededException.class)
     private ResponseEntity<StandardError> handleCardLimitExceededException(CardLimitExceededException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        final HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(CardAlreadyRegisteredException.class)
     private ResponseEntity<StandardError> handleCardAlreadyRegisteredException(CardAlreadyRegisteredException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(CardPendingTransactionException.class)
     private ResponseEntity<StandardError> handleCardPendingTransactionException(CardPendingTransactionException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.CONFLICT;
+        final HttpStatus status = HttpStatus.CONFLICT;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(InsufficientBalanceException.class)
     private ResponseEntity<StandardError> handleInsufficientBalanceException(InsufficientBalanceException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        final HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(ZipCodeDoesNotExistException.class)
     private ResponseEntity<StandardError> handleZipCodeDoesNotExistException(ZipCodeDoesNotExistException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
         return handleException(ex, status, request, ex.getMessage());
     }
 
     @ExceptionHandler(TransactionIdEqualityException.class)
     private ResponseEntity<StandardError> handleTransactionIdEqualityException(TransactionIdEqualityException ex, HttpServletRequest request) {
-        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
+        final HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         return handleException(ex, status, request, ex.getMessage());
     }
 

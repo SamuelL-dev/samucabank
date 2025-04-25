@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @JsonPropertyOrder(value = {"timestamp", "status", "error", "validationErrors", "path"})
 public class ValidationError {
+
         @JsonProperty("timestamp")
         Instant timestamp;
 

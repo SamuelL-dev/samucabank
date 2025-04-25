@@ -14,12 +14,13 @@ public class DebitTransactionValidator implements CardTransactionValidator {
 
     @Override
     public void validate(CardTransactionArgs args) {
-        Integer walletBalance = args.wallet().getBalance();
-        Integer transactionAmount = args.request().amount();
+        final int walletBalance = args.wallet().getBalance();
+        final int amount = args.data().amount();
 
-        if(getType() == args.request().type() && transactionAmount > walletBalance) {
-            throw new InsufficientBalanceException("Insufficient balance to complete the transaction. Please top up your account to continue.");
+        if (getType() == args.data().type() && amount > walletBalance) {
+            throw new InsufficientBalanceException(
+                "Insufficient balance to complete the transaction. Please top up your account to continue."
+            );
         }
-
     }
 }

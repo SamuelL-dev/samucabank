@@ -24,30 +24,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TransactionController implements TransactionSwagger {
 
-    private final TransactionService transactionService;
+    private final TransactionService service;
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionRepository repository;
 
     private final WalletService walletService;
 
     @Override
     @GetMapping("/wallets/{walletId}/statement")
-    public ResponseEntity<StatementDetailsResponse> getStatementByWalletId(@PathVariable("walletId") final String walletId) {
-        final Wallet wallet = walletService.findById(walletId);
+    public ResponseEntity<StatementDetailsResponse> getStatementByWalletId(@PathVariable("walletId") final Wallet walletId) {
+        final Wallet wallet = walletService.findById(walletId.getId());
 
-        final List<Transaction> transactionList = transactionRepository.findTop10BySenderIdOrderByTransactionDateDesc(wallet.getId());
+        final List<Transaction> transactionList = repository.findTop10BySenderIdOrderByTransactionDateDesc(wallet.getId());
 
-        final List<Transaction> receivedTransactions = transactionRepository.findTop10ByReceiverIdOrderByTransactionDateDesc(wallet.getId());
+        final List<Transaction> receivedTransactions = repository.findTop10ByReceiverIdOrderByTransactionDateDesc(wallet.getId());
 
-        final StatementDetailsResponse response = new StatementDetailsResponse(transactionList, receivedTransactions);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new StatementDetailsResponse(transactionList, receivedTransactions));
     }
 
     @Override
     @PostMapping
     public ResponseEntity<TransactionResponse> createTransactionForWallet(@RequestBody @Valid final TransactionRequest request) {
-        transactionService.save(request);
+        service.save(request);
 
         final TransactionResponse response = new TransactionResponse(TransactionStatus.SUCESS, request.description());
 

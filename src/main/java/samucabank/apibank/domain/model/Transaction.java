@@ -6,7 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.AbstractAggregateRoot;
 import samucabank.apibank.domain.event.PaymentConfirmedEvent;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @AllArgsConstructor
@@ -14,35 +16,31 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
-@Entity(name = "tb_transaction")
+@Entity(name = "Transactions")
 public class Transaction extends AbstractAggregateRoot<Transaction> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Setter(AccessLevel.NONE)
-    private String id;
+    @Id private final String id = UUID.randomUUID().toString();
 
     @ManyToOne
-    @JoinColumn(name = "senderId")
-    private Wallet sender;
+    @JoinColumn(name = "senderId") private Wallet sender;
 
     @ManyToOne
-    @JoinColumn(name = "receiverId")
-    private Wallet receiver;
+    @JoinColumn(name = "receiverId") private Wallet receiver;
 
+    @Column(nullable = false) private BigDecimal amount;
 
-    @Column(nullable = false)
-    private Integer amount;
-
-    @CreationTimestamp
-    private LocalDateTime transactionDate;
+    @CreationTimestamp private LocalDateTime date;
 
     public void paymentConfirmedEvent() {
         registerEvent(new PaymentConfirmedEvent(this));
     }
 
     @Builder
-    public Transaction(Wallet sender, Wallet receiver, Integer amount) {
+    public Transaction(
+            Wallet sender,
+            Wallet receiver,
+            BigDecimal amount
+    ) {
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;

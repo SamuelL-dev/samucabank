@@ -5,8 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReceiverBalanceOperation implements TransactionOperation{
     @Override
-    public void applyTransactionOperation(TransactionOperationArgs args) {
-        Integer newReceiverBalance = args.receiver().getBalance() + args.transactionAmount();
-        args.receiver().setBalance(newReceiverBalance);
+    public void apply(TransactionOperationArgs args) {
+        args.receiver().setBalance(args.receiver().getBalance() + args.amount());
     }
 }

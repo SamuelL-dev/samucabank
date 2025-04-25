@@ -23,55 +23,62 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WalletService {
 
-    private final WalletRepository walletRepository;
+    private final WalletRepository repository;
 
     private final UserService userService;
 
-    private final List<RegisterWalletValidator> registerWalletValidators;
+    private final List<RegisterWalletValidator> registerValidators;
 
     private final List<CashFlowOperation> cashFlowOperations;
 
     private final ModelMapper mapper;
 
-    public Wallet findById(final String id) {
-        return walletRepository.findById(id)
-                .orElseThrow(() -> new WalletNotFoundException(id));
+    public Wallet findById(String id) {
+        return repository.findById(id)
+            .orElseThrow(() -> new WalletNotFoundException(id));
     }
 
-    public WalletResponse findByIdDTO(final String id) {
+    public WalletResponse findByIdDTO(String id) {
         final Wallet wallet = findById(id);
         return mapper.map(wallet, WalletResponse.class);
     }
 
 
     @Transactional
-    public WalletResponse save(final String userId) {
+    public WalletResponse save(String userId) {
         final User user = userService.findById(userId);
 
-        registerWalletValidators.forEach(v -> v.validate(new RegisterWalletArgs(user)));
+        registerValidators.forEach(v -> v.validate(
+            new RegisterWalletArgs(user)
+        ));
 
         final Wallet wallet = this.createForUser(user);
 
-        return mapper.map(walletRepository.save(wallet), WalletResponse.class);
+        return mapper.map(repository.save(wallet), WalletResponse.class);
     }
 
     @Transactional
-    public void processDeposit(final String walletId, final BalanceOperationRequest request) {
+    public void processDeposit(
+        String walletId,
+        BalanceOperationRequest data
+    ) {
         final Wallet wallet = findById(walletId);
 
-        cashFlowOperations.stream()
-                .forEach(it -> it.execute(
-                        new CashFlowOperationArgs(
-                                wallet,
-                                request
-                        )));
+        cashFlowOperations.forEach(it ->
+            it.apply(
+                new CashFlowOperationArgs(
+                    wallet,
+                    data
+                )
+            )
+        );
     }
 
-    private Wallet createForUser(final User user) {
+    private Wallet createForUser(User user) {
         return Wallet.builder()
-                .balance(0)
-                .currency(Currency.BRL)
-                .user(user)
-                .build();
+            .balance(0)
+            .currency(Currency.BRL)
+            .user(user)
+            .build();
     }
 }

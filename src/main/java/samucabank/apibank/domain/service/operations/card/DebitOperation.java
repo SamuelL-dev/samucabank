@@ -1,7 +1,10 @@
 package samucabank.apibank.domain.service.operations.card;
 
 import org.springframework.stereotype.Component;
+import samucabank.apibank.api.dtos.request.CardTransactionRequest;
 import samucabank.apibank.domain.enums.card.CardOperationType;
+
+import java.util.Optional;
 
 @Component
 public class DebitOperation implements CardOperation {
@@ -11,11 +14,13 @@ public class DebitOperation implements CardOperation {
     }
 
     @Override
-    public void applyCardTransactionOperation(CardOperationArgs args) {
-        if (args.data().type() == getType()) {
-            Integer newBalance = args.wallet().getBalance() - args.data().amount();
-            args.wallet().setBalance(newBalance);
-        }
+    public void apply(CardOperationArgs args) {
+        CardOperationType request = Optional.ofNullable(args.data())
+            .map(CardTransactionRequest::type)
+            .orElseThrow(() -> new IllegalArgumentException("Operation type cannot be null"));
 
+        if (request == getType()) {
+            args.wallet().setBalance(args.wallet().getBalance() - args.data().amount());
+        }
     }
 }

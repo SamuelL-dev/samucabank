@@ -4,4 +4,8 @@ import samucabank.apibank.api.dtos.request.CardTransactionRequest;
 import samucabank.apibank.domain.model.Card;
 import samucabank.apibank.domain.model.Wallet;
 
-public record CardTransactionArgs(CardTransactionRequest request, Card card, Wallet wallet){}
+public record CardTransactionArgs(
+    CardTransactionRequest data,
+    Card card,
+    Wallet wallet
+){}

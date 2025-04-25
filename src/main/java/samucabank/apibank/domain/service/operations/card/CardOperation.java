@@ -5,5 +5,6 @@ import samucabank.apibank.domain.enums.card.CardOperationType;
 public interface CardOperation {
 
     CardOperationType getType();
-    void applyCardTransactionOperation(CardOperationArgs args);
+
+    void apply(CardOperationArgs args);
 }

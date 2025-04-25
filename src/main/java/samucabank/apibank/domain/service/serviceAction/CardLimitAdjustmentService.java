@@ -11,15 +11,15 @@ public class CardLimitAdjustmentService {
     private static final int UPPER_LIMIT = 3500;
     private static final int MAX_LIMIT = 5000;
 
-    public void adjustCardLimitBasedOnUserScore(final Card card, final int userScore) {
+    public void adjustCardLimitBasedOnUserScore(Card card, int userScore) {
         if (userScore <= 400) {
-            card.setCardLimit(LOWER_LIMIT);
+            card.setLimit(LOWER_LIMIT);
         } else if (userScore <= 600) {
-            card.setCardLimit(MEDIUM_LIMIT);
+            card.setLimit(MEDIUM_LIMIT);
         } else if (userScore <= 800) {
-            card.setCardLimit(UPPER_LIMIT);
+            card.setLimit(UPPER_LIMIT);
         } else {
-            card.setCardLimit(MAX_LIMIT);
+            card.setLimit(MAX_LIMIT);
         }
     }
 }

@@ -27,7 +27,7 @@ public class UserRequest {
 
         @NotBlank @Size(min = 6, max = 14) private String password;
 
-        @Email @NotBlank private String email;
+        @NotBlank private String email;
 
         @NotBlank private String document;
 

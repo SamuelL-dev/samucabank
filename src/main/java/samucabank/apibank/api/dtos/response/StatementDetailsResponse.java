@@ -14,12 +14,17 @@ public class StatementDetailsResponse {
 
     private List<StatementReceiverResponse> transferReceived;
 
-    public StatementDetailsResponse(List<Transaction> sentTransactions, List<Transaction> receivedTransactions) {
-        this.transferSent = sentTransactions.stream()
-                .map(StatementSenderResponse::new)
-                .toList();
+    public StatementDetailsResponse(
+        List<Transaction> sentTransactions,
+        List<Transaction> receivedTransactions
+    ) {
+        this.transferSent = sentTransactions
+            .stream()
+            .map(StatementSenderResponse::new)
+            .toList();
 
-        this.transferReceived = receivedTransactions.stream()
+        this.transferReceived = receivedTransactions
+            .stream()
                 .map(StatementReceiverResponse::new)
                 .toList();
     }

@@ -13,7 +13,7 @@ public class CreditOperation implements CardOperation {
     }
 
     @Override
-    public void applyCardTransactionOperation(CardOperationArgs args) {
+    public void apply(CardOperationArgs args) {
         if (args.data().type() == getType()) {
             Integer newAmountSpent = args.card().getAmountSpent() + args.data().amount();
             args.card().setAmountSpent(newAmountSpent);

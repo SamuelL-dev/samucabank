@@ -23,7 +23,7 @@ public class SmtpSendEmailService implements SendEmailService {
     private final EmailProcessTemplate emailProcessTemplate;
 
     @Override
-    public void send(final Message message) {
+    public void send(Message message) {
         try {
             final MimeMessage mimeMessage = createMimeMessage(message);
             this.javaMailSender.send(mimeMessage);
@@ -32,7 +32,7 @@ public class SmtpSendEmailService implements SendEmailService {
         }
     }
 
-    protected MimeMessage createMimeMessage(final Message message) throws MessagingException {
+    protected MimeMessage createMimeMessage(Message message) throws MessagingException {
         final String body = emailProcessTemplate.templateProcess(message);
 
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();

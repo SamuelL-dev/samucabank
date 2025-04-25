@@ -7,10 +7,11 @@ import samucabank.apibank.domain.enums.user.UserRole;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public UserDetailsImpl(User user) {
         this.user = user;
@@ -19,18 +20,27 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (user.getRole() == UserRole.ADMIN)
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER")
+            );
+
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return Optional.of(user)
+            .map(User::getPassword)
+            .orElseThrow(() -> new IllegalArgumentException("Password cannot be null"));
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return Optional.of(user)
+            .map(User::getEmail)
+            .map(Email::getEmail)
+            .orElseThrow(() -> new IllegalArgumentException("Email cannot be null"));
     }
 
     @Override
